@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_list/models/todo_item.dart';
@@ -25,7 +24,7 @@ class _HomePageState extends State<HomePage> {
       // await Future.delayed(const Duration(seconds: 3), () {});
 
       final response =
-          await _dio.get('https://jsonplaceholder.typicode.com/todos');
+          await _dio.get('https://jsonplaceholder.typicode.com/albums');
       debugPrint(response.data.toString());
       // parse
       List list = jsonDecode(response.data.toString());
@@ -67,26 +66,38 @@ class _HomePageState extends State<HomePage> {
     } else if (_itemList == null) {
       body = const Center(child: CircularProgressIndicator());
     } else {
-      body = ListView.builder(
+      body = Column(children:[Text("Photo Album",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold),),
+      Expanded(child: ListView.builder(
           itemCount: _itemList!.length,
           itemBuilder: (context, index) {
             var todoItem = _itemList![index];
             return Card(
                 child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(children: [
-                      Expanded(child: Text(todoItem.title)),
-                      Checkbox(
-                          value: todoItem.completed,
-                          onChanged: (newValue) {
-                            setState(() {
-                              todoItem.completed = newValue!;
-                            });
-                          })
-                    ])));
-          });
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(children: [
+                    Row(children: [Text(todoItem.title)]),
+                    Row(
+                      children: [
+                        Card(
+                          color: Colors.red[200],
+                          child: Text("Albums_ID:" + todoItem.id.toString()),
+                        ),
+                        Card(
+                          color: Colors.lightBlueAccent[100],
+                          child:
+                          Text("User_ID:" + todoItem.userId.toString()),
+                        )
+                      ],
+                    ),
+
+                  ]),
+                ));
+          }),
+      )],
+      );
     }
 
     return Scaffold(body: body);
   }
 }
+
